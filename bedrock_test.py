@@ -1,50 +1,35 @@
+import streamlit as st
 from langchain.llms.bedrock import Bedrock
 from langchain.chains import LLMChain
 from langchain.prompts import PromptTemplate
-import boto3
-import streamlit as st
-
-
-#Bedrock client
-
-bedrock_client = boto3.client(
-    service_name = "bedrock-runtime",
-    region_name = "us-east-1",
-)
-
-model_id = "ai21.j2-mid-v1"
-
+from config import bedrock_client, LLM_MODEL_ID
 
 llm = Bedrock(
-    model_id= model_id,
-    client= bedrock_client,
+    model_id=LLM_MODEL_ID,
+    client=bedrock_client,
     model_kwargs={"temperature": 0.9}
 )
-
-
 
 def my_chatbot(language, user_text):
     prompt = PromptTemplate(
         input_variables=["language", "user_text"],
         template="You are a chatbot. You are in {language}.\n\n{user_text}"
     )
+    chain = LLMChain(llm=llm, prompt=prompt)
+    return chain({"language": language, "user_text": user_text})
 
-    bedrock_chain = LLMChain(llm=llm, prompt=prompt)
-    response=bedrock_chain({'language':language, 'user_text':user_text})
+st.set_page_config(page_title="Bedrock Chatbot Demo", layout="centered")
+st.title("🤖 Bedrock Chatbot Demo")
 
-    return response
+language = st.sidebar.selectbox("Choose Language", [
+    "english", "spanish", "hindi", "french", "german",
+    "chinese", "japanese", "arabic", "farsi"
+])
 
-
-
-st.title("Bedrock Chatbot Demo")
-
-language = st.sidebar.selectbox("Language", ["english", "spanish", "hindi", "french", "german", "chinese", "japanese", "arabic", "farsi"])
-
-if language:
-    user_text = st.sidebar.text_area(label="what is your question?",
-    max_chars=100)
-
+user_text = st.sidebar.text_area("💬 Ask your question:", max_chars=200)
 
 if user_text:
-    response = my_chatbot(language,user_text)
-    st.write(response['text'])
+    with st.spinner("Generating response..."):
+        response = my_chatbot(language, user_text)
+        st.subheader("📢 Response")
+        st.write(response['text'])

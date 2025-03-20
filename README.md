@@ -1,67 +1,45 @@
 # 📄 PDF-QnA-E2E-RAG-System-on-Amazon-Bedrock
 
-An end-to-end **Retrieval-Augmented Generation (RAG)** system built on **Amazon Bedrock** to answer natural language questions from a PDF document. This project intelligently extracts relevant content from PDFs and uses foundation models to generate accurate, context-aware responses.
+An end-to-end **Retrieval-Augmented Generation (RAG)** system built on **Amazon Bedrock** to answer natural language questions from PDF documents. This project extracts relevant content from PDFs and uses foundation models to generate accurate, context-aware responses.
 
 ---
 
 ## 🚀 Features
 
-- 🔍 Semantic search on PDF documents  
-- 🧠 Contextual response generation using foundation models via Amazon Bedrock  
-- 📦 Clean modular design for easy experimentation  
-- 💡 Streamlit-based interactive demo interface  
+✅ **Intelligent PDF Q&A** – Extracts and retrieves relevant content dynamically  
+✅ **Amazon Bedrock Integration** – Uses state-of-the-art foundation models  
+✅ **Efficient Semantic Search** – FAISS-based vector storage for fast retrieval  
+✅ **Streamlit UI** – Interactive demo for seamless user experience  
 
 ---
 
-## 🧱 System Architecture
+## 🏗️ System Architecture
 
-The diagram below illustrates the high-level structure of the system:
+Below is the high-level architecture of the system:
 
 ![RAG Architecture](images/rag_architecture.png)
 
-Diagram Flow:
-
-[ PDF File ] 
-     |
-     v
-[ Text Extraction (PyPDF) ]
-     |
-     v
-[ Chunking (LangChain) ]
-     |
-     v
-[ Embedding (Bedrock Embedding Model) ]
-     |
-     v
-[ Vector Store (FAISS) ]
-     |
-     v
-[ Retriever (LangChain) ]
-     |
-     v
-[ Prompt + Retrieved Chunks ]
-     |
-     v
-[ Amazon Bedrock (LLM) ]
-     |
-     v
-[ Final Answer ]
-     |
-     v
-[ Streamlit UI ]
+### 🔹 Workflow:
+1. **PDF Upload** → Extract text using `PyPDF`  
+2. **Chunking** → Break text into meaningful sections using `LangChain`  
+3. **Embedding** → Convert text chunks into vector representations (`Amazon Titan Embeddings`)  
+4. **Vector Store** → Store embeddings using `FAISS`  
+5. **Retriever** → Fetch the most relevant chunks  
+6. **Bedrock LLM** → Generate accurate, context-aware responses  
+7. **Streamlit UI** → Interactive interface for user queries  
 
 ---
 
 ## 🛠️ Getting Started
 
-### 1. Clone the Repository
+### 1️⃣ Clone the Repository
 
 ```bash
 git clone https://github.com/mahdimirmojarabian/PDF-QnA-E2E-RAG-System-on-Amazon-Bedrock.git
 cd PDF-QnA-E2E-RAG-System-on-Amazon-Bedrock
 ```
 
-### 2. Set Up a Virtual Environment
+### 2️⃣ Set Up a Virtual Environment
 
 ```bash
 python -m venv rag_bedrock
@@ -81,7 +59,9 @@ Activate the environment:
   rag_bedrock\Scripts\activate
   ```
 
-### 3. Install Dependencies
+### 3️⃣ Install Dependencies
+
+Install all required packages:
 
 ```bash
 pip install -r requirements.txt
@@ -91,20 +71,34 @@ pip install -r requirements.txt
 
 ## 🔐 AWS Configuration
 
-### 4. Install AWS CLI
+### 4️⃣ Install AWS CLI
 
 Follow the official guide to install the AWS CLI:  
-👉 [Install AWS CLI](https://docs.aws.amazon.com/cli/latest/userguide/getting-started-install.html)
+👉 [AWS CLI Installation](https://docs.aws.amazon.com/cli/latest/userguide/getting-started-install.html)
 
-### 5. Configure AWS Credentials
+### 5️⃣ Configure AWS Credentials
 
-Run the following command and provide your credentials:
+Run:
 
 ```bash
 aws configure
 ```
 
-Make sure your IAM role has permissions to access Amazon Bedrock and related services.
+Provide your **AWS Access Key ID, Secret Access Key, Region, and Output Format**. Make sure your IAM role has access to **Amazon Bedrock** and related services.
+
+---
+
+## ⚙️ Environment Configuration
+
+This project uses a `.env` file to manage environment-specific configurations. These variables are loaded automatically using `python-dotenv` in the `config.py` file.
+
+### 📦 What These Variables Do
+
+| Variable             | Description                                                                                         |
+|----------------------|-----------------------------------------------------------------------------------------------------|
+| `AWS_REGION`         | Your default AWS region where Bedrock is available                                                  |
+| `EMBEDDING_MODEL_ID` | The ID of the embedding model used to convert PDF chunks into vectors (Titan, etc.)                 |
+| `LLM_MODEL_ID`       | The foundation model ID used to generate context-aware responses via Bedrock (LLaMA2, Claude, etc.) |
 
 ---
 
@@ -112,19 +106,19 @@ Make sure your IAM role has permissions to access Amazon Bedrock and related ser
 
 ### Streamlit Demos
 
-You can run two different Streamlit apps based on your needs:
+You can run two different Streamlit applications:
 
-#### 🧪 Test Bedrock Connectivity (Simple Chatbot)
+#### 🧪 Bedrock Connectivity Test (Simple Chatbot)
 
-Use this to verify your Bedrock setup and test simple prompt-response interactions with the model:
+Run this to verify your Bedrock setup using a simple LLM chat interface:
 
 ```bash
 streamlit run bedrock_test.py
 ```
 
-#### 🚀 Launch Full RAG Application
+#### 🚀 Main RAG Application (PDF-Based Q&A)
 
-This runs the complete end-to-end Retrieval-Augmented Generation system for PDF-based Q&A:
+This runs the complete Retrieval-Augmented Generation system for PDF-based Q&A:
 
 ```bash
 streamlit run rag_demo.py
@@ -134,22 +128,30 @@ streamlit run rag_demo.py
 
 ## 📚 Use Cases
 
-- Internal document Q&A systems  
-- Customer support knowledge base integration  
-- Legal and compliance document summarization  
-- Academic and research assistance  
+🔹 **Legal & Compliance** – Search contracts and policies for key insights  
+🔹 **Customer Support** – Automate responses from FAQs and support docs  
+🔹 **Research & Academics** – Extract relevant information from scientific papers  
+🔹 **Enterprise Knowledge Base** – Access company documents with natural language queries  
 
 ---
 
 ## 🧠 Powered By
 
-- **Amazon Bedrock**  
-- **LangChain / FAISS**  
-- **Streamlit**  
-- **Python 3.8+**
+- **Amazon Bedrock (LLMs & Embeddings)**  
+- **LangChain for Retrieval-Augmented Generation (RAG)**  
+- **FAISS (Vector Database)**  
+- **Streamlit (UI & Demos)**  
+- **Python 3.9+**
+
+---
+
+## 🤝 Contributions
+
+Contributions are welcome! Feel free to open an issue or submit a pull request.
 
 ---
 
 ## 📬 Contact
 
-For questions, suggestions, or contributions, feel free to open an issue or contact me on [LinkedIn](https://www.linkedin.com/in/m-mahdi-mir).
+For questions, suggestions, or collaborations, reach out via:  
+🔗 **[LinkedIn](https://www.linkedin.com/in/m-mahdi-mir)**
