@@ -10,6 +10,39 @@ from langchain.prompts import PromptTemplate
 from langchain.chains import RetrievalQA
 from config import bedrock_client, EMBEDDING_MODEL_ID, LLM_MODEL_ID
 
+# -----------------------------
+# 🧹 Query Preprocessing with NLTK
+# -----------------------------
+import nltk
+from nltk.tokenize import word_tokenize
+from nltk.corpus import stopwords
+
+nltk.download('punkt_tab')
+
+try:
+    nltk.data.find("tokenizers/punkt")
+except LookupError:
+    nltk.download("punkt")
+
+try:
+    nltk.data.find("corpora/stopwords")
+except LookupError:
+    nltk.download("stopwords")
+
+def preprocess_question(question, language="english"):
+    try:
+        stop_words = set(stopwords.words(language))
+    except OSError:
+        stop_words = set()
+
+    tokens = word_tokenize(question)
+    tokens = [word for word in tokens if word.isalnum()]
+    tokens = [word for word in tokens if word.lower() not in stop_words]
+    return " ".join(tokens)
+
+# -----------------------------
+# 💬 Prompt Template
+# -----------------------------
 prompt_template = """
 Human: Using the provided context, craft a concise response to the question at the end. Ensure the summary is at least 250 words and includes detailed explanations. If the answer is unknown, simply state that you do not know and avoid creating a speculative response.
 
@@ -21,11 +54,13 @@ Question: {question}
 
 Assistant:
 """
-
 PROMPT = PromptTemplate(template=prompt_template, input_variables=["context", "question"])
 
 bedrock_embeddings = BedrockEmbeddings(model_id=EMBEDDING_MODEL_ID, client=bedrock_client)
 
+# -----------------------------
+# 📄 PDF Processing
+# -----------------------------
 @st.cache_data
 def process_uploaded_pdfs(uploaded_files):
     temp_dir = "uploaded_data"
@@ -47,6 +82,9 @@ def process_uploaded_pdfs(uploaded_files):
     shutil.rmtree(temp_dir)
     return chunks
 
+# -----------------------------
+# 🧠 FAISS Store & LLM
+# -----------------------------
 @st.cache_resource
 def load_vector_store():
     return FAISS.load_local("faiss_index", bedrock_embeddings, allow_dangerous_deserialization=True)
@@ -68,6 +106,9 @@ def get_response_llm(llm, vectorstore, query):
     )
     return qa({"query": query})
 
+# -----------------------------
+# 📂 Sidebar: Upload & Process PDFs
+# -----------------------------
 def handle_sidebar():
     st.title("📂 Upload PDFs & Create Vector Store")
     uploaded_files = st.file_uploader("Upload one or more PDF files", type="pdf", accept_multiple_files=True)
@@ -78,6 +119,9 @@ def handle_sidebar():
             get_vector_store(docs)
             st.success("✅ Vector store created!")
 
+# -----------------------------
+# 🔎 Query UI
+# -----------------------------
 def handle_query():
     query = st.text_input("💬 Ask a question about the PDFs")
 
@@ -87,9 +131,10 @@ def handle_query():
             return
 
         with st.spinner("Generating answer..."):
+            cleaned_query = preprocess_question(query)
             vectorstore = load_vector_store()
             llm = get_llm()
-            result = get_response_llm(llm, vectorstore, query)
+            result = get_response_llm(llm, vectorstore, cleaned_query)
 
             st.subheader("📢 Answer")
             st.write(result["result"])
@@ -98,6 +143,9 @@ def handle_query():
                 for doc in result["source_documents"]:
                     st.markdown(doc.page_content)
 
+# -----------------------------
+# 🚀 Main App
+# -----------------------------
 def main():
     st.set_page_config(page_title="PDF QnA - RAG on Bedrock", layout="wide")
     st.header("📄 PDF-based Question Answering with Amazon Bedrock")

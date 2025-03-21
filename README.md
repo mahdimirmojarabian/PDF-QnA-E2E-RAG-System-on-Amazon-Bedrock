@@ -9,6 +9,7 @@ An end-to-end **Retrieval-Augmented Generation (RAG)** system built on **Amazon 
 ✅ **Intelligent PDF Q&A** – Extracts and retrieves relevant content dynamically  
 ✅ **Amazon Bedrock Integration** – Uses state-of-the-art foundation models  
 ✅ **Efficient Semantic Search** – FAISS-based vector storage for fast retrieval  
+✅ **NLTK-Based Query Preprocessing** – Improves search accuracy via tokenization and stopword filtering  
 ✅ **Streamlit UI** – Interactive demo for seamless user experience  
 
 ---
@@ -24,9 +25,10 @@ Below is the high-level architecture of the system:
 2. **Chunking** → Break text into meaningful sections using `LangChain`  
 3. **Embedding** → Convert text chunks into vector representations (`Amazon Titan Embeddings`)  
 4. **Vector Store** → Store embeddings using `FAISS`  
-5. **Retriever** → Fetch the most relevant chunks  
-6. **Bedrock LLM** → Generate accurate, context-aware responses  
-7. **Streamlit UI** → Interactive interface for user queries  
+5. **NLTK Preprocessing** → Clean and tokenize user query for better retrieval  
+6. **Retriever** → Fetch the most relevant chunks  
+7. **Bedrock LLM** → Generate accurate, context-aware responses  
+8. **Streamlit UI** → Interactive interface for user queries  
 
 ---
 
@@ -140,6 +142,7 @@ streamlit run rag_demo.py
 - **Amazon Bedrock (LLMs & Embeddings)**  
 - **LangChain for Retrieval-Augmented Generation (RAG)**  
 - **FAISS (Vector Database)**  
+- **NLTK (Query Preprocessing)**  
 - **Streamlit (UI & Demos)**  
 - **Python 3.9+**
 
