@@ -4,6 +4,21 @@ An end-to-end **Retrieval-Augmented Generation (RAG)** system built on **Amazon 
 
 ---
 
+## Interface Previews
+
+### Bedrock Connectivity Test
+
+<div style="border: 3px solid #4CAF50; padding: 15px; margin: 10px auto; display: inline-block; border-radius: 8px; box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);">
+  <img src="images/Bedrock%20Connectivity%20Test.png" alt="Bedrock Connectivity Test Image" width="600"/>
+</div>
+
+### Main RAG Application
+<div style="border: 3px solid #4CAF50; padding: 15px; margin: 10px auto; display: inline-block; border-radius: 8px; box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);">
+  <img src="images/Main%20RAG%20Application.png" alt="Main RAG Application Image" width="600"/>
+</div>
+
+---
+
 ## 🚀 Features
 
 ✅ **Intelligent PDF Q&A** – Extracts and retrieves relevant content dynamically  
